@@ -114,16 +114,12 @@ canvas {
 
 .prompt-icon {
   color: var(--color-accent);
-  animation: bobRight 1s ease-in-out infinite alternate;
+  animation: pulse 1.2s ease-in-out infinite;
 }
 
-@keyframes bobRight {
-  from { transform: translateX(-6px); }
-  to { transform: translateX(6px); }
-}
-
-.prompt-icon svg {
-  transform: rotate(-90deg);
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.15); opacity: 1; }
 }
 
 .prompt-text {
@@ -216,6 +212,6 @@ canvas {
 /* === MOBILE HINT === */
 @media (hover: none) {
   .prompt-text::after {
-    content: ' (Swipe right)';
+    content: ' (Tap)';
   }
 }

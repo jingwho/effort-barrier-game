@@ -39,8 +39,7 @@ let phase = 'start';       // start | auto | stopped | pushing | summit | descen
 let pushProgress = 0;      // 0..1 for pushing phase
 let currentObstacle = -1;
 let obstacleTimer = 0;
-let mouseX = 0;
-let lastMouseX = 0;
+
 let pushEnergy = 0;
 let particles = [];
 let shakeAmount = 0;
@@ -322,25 +321,6 @@ function drawTrack() {
   }
   ctx.stroke();
 
-  // Dotted zones (flat sections below the humps)
-  drawDottedZone(HUMP1_VALLEY, FLAT_ZONE);
-  drawDottedZone(HUMP2_START + 0.15, DESCENT_START - 0.02);
-}
-
-function drawDottedZone(tStart, tEnd) {
-  const baseY = H * 0.82;
-  const startPt = getTrackPoint(tStart);
-  const endPt = getTrackPoint(tEnd);
-  const y = baseY + H * 0.02;
-
-  ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-  ctx.lineWidth = 4;
-  ctx.setLineDash([8, 10]);
-  ctx.beginPath();
-  ctx.moveTo(startPt.x, y);
-  ctx.lineTo(endPt.x, y);
-  ctx.stroke();
-  ctx.setLineDash([]);
 }
 
 function drawAnnotations(alpha) {
@@ -565,30 +545,18 @@ document.getElementById('replay-btn').addEventListener('click', () => {
   startGame();
 });
 
-window.addEventListener('mousemove', (e) => {
-  const newX = e.clientX * window.devicePixelRatio;
-  const dx = newX - mouseX;
-  mouseX = newX;
-
-  if (phase === 'stopped' && dx > 0) {
-    advancePush(dx / W * 2);
+// Click to push
+window.addEventListener('click', (e) => {
+  if (phase === 'stopped') {
+    advancePush(0.045);
   }
 });
 
-// Touch support
-let lastTouchX = 0;
-window.addEventListener('touchmove', (e) => {
-  const touch = e.touches[0];
-  const newX = touch.clientX * window.devicePixelRatio;
-  const dx = newX - lastTouchX;
-  lastTouchX = newX;
-
-  if (phase === 'stopped' && dx > 0) {
-    advancePush(dx / W * 2);
-  }
-});
+// Touch support — tap to push
 window.addEventListener('touchstart', (e) => {
-  lastTouchX = e.touches[0].clientX * window.devicePixelRatio;
+  if (phase === 'stopped') {
+    advancePush(0.045);
+  }
 });
 
 window.addEventListener('resize', resize);
