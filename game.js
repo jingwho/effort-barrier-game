@@ -545,15 +545,18 @@ document.getElementById('replay-btn').addEventListener('click', () => {
   startGame();
 });
 
-// Click to push
-window.addEventListener('click', (e) => {
+// Click anywhere to push (use document to capture clicks on overlays too)
+document.addEventListener('click', (e) => {
+  // Don't count start/replay button clicks as pushes
+  if (e.target.id === 'start-btn' || e.target.id === 'replay-btn') return;
   if (phase === 'stopped') {
     advancePush(0.045);
   }
 });
 
-// Touch support — tap to push
-window.addEventListener('touchstart', (e) => {
+// Touch support — tap anywhere to push
+document.addEventListener('touchstart', (e) => {
+  if (e.target.id === 'start-btn' || e.target.id === 'replay-btn') return;
   if (phase === 'stopped') {
     advancePush(0.045);
   }
