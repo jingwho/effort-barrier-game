@@ -1,0 +1,221 @@
+/* === BASE === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font-display: 'Cabinet Grotesk', sans-serif;
+  --font-body: 'Satoshi', sans-serif;
+  --color-bg: #0d1117;
+  --color-surface: rgba(255,255,255,0.06);
+  --color-text: #e6edf3;
+  --color-text-muted: #8b949e;
+  --color-accent: #f0c040;
+  --color-accent-glow: rgba(240,192,64,0.3);
+  --color-danger: #ff6b6b;
+  --color-track: #3b82f6;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--color-bg);
+  font-family: var(--font-body);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+canvas {
+  display: block;
+  width: 100%; height: 100%;
+  position: fixed; inset: 0;
+}
+
+/* === UI OVERLAY === */
+#ui-overlay {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.screen {
+  position: absolute; inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+  pointer-events: none;
+}
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* === START SCREEN === */
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--color-text-muted);
+  margin-top: 12px;
+  text-align: center;
+  max-width: 420px;
+  line-height: 1.5;
+}
+
+.btn-primary {
+  margin-top: 32px;
+  padding: 14px 40px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  color: #0d1117;
+  background: var(--color-accent);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 180ms var(--ease-out), box-shadow 180ms var(--ease-out);
+  pointer-events: auto;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--color-accent-glow);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* === PUSH PROMPT === */
+#push-prompt {
+  justify-content: flex-end;
+  padding-bottom: 6vh;
+}
+
+.prompt-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 36px;
+  background: rgba(13,17,23,0.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+}
+
+.prompt-icon {
+  color: var(--color-accent);
+  animation: bobRight 1s ease-in-out infinite alternate;
+}
+
+@keyframes bobRight {
+  from { transform: translateX(-6px); }
+  to { transform: translateX(6px); }
+}
+
+.prompt-icon svg {
+  transform: rotate(-90deg);
+}
+
+.prompt-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.push-meter-container {
+  width: 240px;
+}
+
+.push-meter-bg {
+  width: 100%;
+  height: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.push-meter-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent), #ff8c00);
+  border-radius: 5px;
+  transition: width 60ms linear;
+}
+
+/* === OBSTACLE POPUP === */
+#obstacle-popup {
+  justify-content: flex-start;
+  padding-top: 4vh;
+}
+
+.obstacle-label {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  color: var(--color-danger);
+  text-align: center;
+  text-shadow: 0 0 30px rgba(255,107,107,0.5), 0 2px 8px rgba(0,0,0,0.6);
+  transform: scale(0.6);
+  opacity: 0;
+  transition: transform 0.4s var(--ease-out), opacity 0.3s var(--ease-out);
+  padding: 0 24px;
+}
+
+.obstacle-label.visible {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* === FINISH SCREEN === */
+.finish-title {
+  color: var(--color-danger);
+}
+.finish-sub {
+  max-width: 540px;
+}
+.finish-sub strong {
+  color: var(--color-accent);
+}
+
+/* === AXIS LABELS === */
+.axis-label {
+  position: absolute;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+}
+.axis-label.visible {
+  opacity: 1;
+}
+#y-axis-label {
+  left: 20px;
+  top: 50%;
+  transform: rotate(-90deg) translateX(-50%);
+  transform-origin: left center;
+}
+#x-axis-label {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* === MOBILE HINT === */
+@media (hover: none) {
+  .prompt-text::after {
+    content: ' (Swipe right)';
+  }
+}

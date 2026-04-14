@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Effort Barrier — Roller Coaster</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@700;800;900&family=Satoshi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas id="game"></canvas>
+  
+  <!-- UI Overlay -->
+  <div id="ui-overlay">
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+      <h1 class="title">The Effort Barrier</h1>
+      <p class="subtitle">Why AI alone can't finish the job</p>
+      <button id="start-btn" class="btn-primary">Start the Ride</button>
+    </div>
+
+    <!-- Push prompt -->
+    <div id="push-prompt" class="screen">
+      <div class="prompt-box">
+        <div class="prompt-icon">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <path d="M24 4L24 44M24 44L38 30M24 44L10 30" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="mouse-arrow"/>
+          </svg>
+        </div>
+        <p class="prompt-text">Move your mouse right to push the cart</p>
+        <div class="push-meter-container">
+          <div class="push-meter-bg">
+            <div id="push-meter" class="push-meter-fill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Obstacle popup -->
+    <div id="obstacle-popup" class="screen">
+      <div id="obstacle-label" class="obstacle-label"></div>
+    </div>
+
+    <!-- Finish Screen -->
+    <div id="finish-screen" class="screen">
+      <h1 class="title finish-title">The Rate-Determining Step</h1>
+      <p class="subtitle finish-sub">AI automates data. But <strong>Complex Human Judgment</strong>, <strong>Consensus</strong>, <strong>Politics</strong>, <strong>Regulation</strong>, and <strong>Interpersonal Relationships</strong> remain the real bottleneck.</p>
+      <button id="replay-btn" class="btn-primary">Ride Again</button>
+    </div>
+
+    <!-- Axis labels -->
+    <div id="y-axis-label" class="axis-label">Effort Barrier</div>
+    <div id="x-axis-label" class="axis-label">Organizational Task Flow →</div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
