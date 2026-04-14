@@ -458,6 +458,8 @@ function startGame() {
   cartSpeed = 0;
   pushProgress = 0;
   currentObstacle = -1;
+  pushEnergy = 0;
+  transitioning = false;
   particles = [];
   showScreen(null);
   yAxisLabel.classList.add('visible');
@@ -467,10 +469,19 @@ function startGame() {
 function stopAtHump2() {
   phase = 'stopped';
   cartSpeed = 0;
+  cartPos = STOP_POINT; // clamp exactly
   showScreen(pushPrompt);
   pushProgress = 0;
   currentObstacle = 0;
-  showObstacle(0);
+  pushEnergy = 0;
+  // Show first obstacle WITHOUT shake — the cart just arrived, don't jolt
+  obstacleLabel.textContent = OBSTACLES[0];
+  obstacleLabel.classList.remove('visible');
+  obstaclePopup.classList.add('active');
+  playObstacleSound();
+  requestAnimationFrame(() => {
+    obstacleLabel.classList.add('visible');
+  });
 }
 
 function showObstacle(idx) {
@@ -498,12 +509,14 @@ function showObstacle(idx) {
     obstacleLabel.classList.add('visible');
   });
   
-  // Shake
-  shakeAmount = 8;
+  // Shake — only after the first obstacle (first one arrives via stopAtHump2 without shake)
+  shakeAmount = 6;
 }
 
+let transitioning = false; // true during obstacle-to-obstacle transition
+
 function advancePush(amount) {
-  if (phase !== 'stopped') return;
+  if (phase !== 'stopped' || transitioning) return;
 
   pushEnergy += amount;
   const threshold = 0.22; // energy needed per obstacle
@@ -516,7 +529,10 @@ function advancePush(amount) {
   // Move cart gradually within this obstacle's segment
   const baseProgress = currentObstacle / OBSTACLES.length;
   pushProgress = baseProgress + obstacleProgress * segmentFraction;
-  cartPos = PUSH_SEGMENT_START + pushProgress * (PUSH_SEGMENT_END - PUSH_SEGMENT_START);
+  const newPos = PUSH_SEGMENT_START + pushProgress * (PUSH_SEGMENT_END - PUSH_SEGMENT_START);
+
+  // Never let cart go backward
+  cartPos = Math.max(cartPos, newPos);
 
   // Particles on push
   const pt = getTrackPoint(cartPos);
@@ -530,8 +546,10 @@ function advancePush(amount) {
     pushEnergy = 0;
     pushMeter.style.width = '0%';
     obstacleLabel.classList.remove('visible');
+    transitioning = true;
     
     setTimeout(() => {
+      transitioning = false;
       showObstacle(currentObstacle + 1);
     }, 400);
   }

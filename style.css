@@ -49,7 +49,7 @@ canvas {
 }
 .screen.active {
   opacity: 1;
-  pointer-events: auto;
+  pointer-events: none; /* let clicks pass through to document listener */
 }
 
 /* === START SCREEN === */
